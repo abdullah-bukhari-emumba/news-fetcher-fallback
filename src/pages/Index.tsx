@@ -2,23 +2,53 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { NewsCard } from "@/components/NewsCard";
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { SearchBar } from "@/components/SearchBar";
+import { SourceFilter } from "@/components/SourceFilter";
 import { fetchNews } from "@/services/newsService";
-import { Category } from "@/data/mockNews";
+import { Category, Source } from "@/data/mockNews";
 import { Skeleton } from "@/components/ui/skeleton";
+import { format, parseISO, isAfter, isBefore } from "date-fns";
+import { DatePickerWithRange } from "@/components/DatePickerWithRange";
+import { DateRange } from "react-day-picker";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>("all");
+  const [selectedSource, setSelectedSource] = useState<Source | "all">("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
   const { data: news, isLoading } = useQuery({
-    queryKey: ["news", selectedCategory],
+    queryKey: ["news", selectedCategory, selectedSource, searchTerm, dateRange],
     queryFn: () => fetchNews(selectedCategory),
   });
 
+  const filteredNews = news?.filter((article) => {
+    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesSource = selectedSource === "all" || article.source.name === selectedSource;
+    
+    const matchesDate = !dateRange?.from || !dateRange?.to || (
+      isAfter(parseISO(article.publishedAt), dateRange.from) &&
+      isBefore(parseISO(article.publishedAt), dateRange.to)
+    );
+
+    return matchesSearch && matchesSource && matchesDate;
+  });
+
   return (
-    <div className="min-h-screen bg-background p-6 md:p-8">
+    <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold mb-8">Latest News</h1>
         
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+          <div className="flex gap-4 flex-wrap">
+            <SourceFilter selectedSource={selectedSource} onSourceChange={setSelectedSource} />
+            <DatePickerWithRange date={dateRange} onDateChange={setDateRange} />
+          </div>
+        </div>
+
         <CategoryFilter
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
@@ -36,7 +66,7 @@ const Index = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {news?.map((article) => (
+            {filteredNews?.map((article) => (
               <NewsCard key={article.id} article={article} />
             ))}
           </div>
