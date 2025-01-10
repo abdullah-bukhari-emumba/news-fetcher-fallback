@@ -27,8 +27,8 @@ export function SourceFilter({ selectedSource, onSourceChange }: SourceFilterPro
   // Ensure we have a valid selectedSource value
   const displayValue = selectedSource || "all";
   
-  // Ensure sources array is valid
-  const sourceOptions = Array.isArray(sources) ? sources : [];
+  // Ensure sources array is valid and add "all" option
+  const sourceOptions = ["all", ...(Array.isArray(sources) ? sources : [])];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -44,41 +44,26 @@ export function SourceFilter({ selectedSource, onSourceChange }: SourceFilterPro
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Command>
+        <Command value={displayValue}>
           <CommandInput placeholder="Search source..." />
           <CommandEmpty>No source found.</CommandEmpty>
           <CommandGroup>
-            <CommandItem
-              value="all"
-              onSelect={() => {
-                onSourceChange("all");
-                setOpen(false);
-              }}
-            >
-              <Check
-                className={cn(
-                  "mr-2 h-4 w-4",
-                  displayValue === "all" ? "opacity-100" : "opacity-0"
-                )}
-              />
-              All Sources
-            </CommandItem>
             {sourceOptions.map((source) => (
               <CommandItem
                 key={source}
                 value={source}
                 onSelect={() => {
-                  onSourceChange(source);
+                  onSourceChange(source as Source | "all");
                   setOpen(false);
                 }}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    selectedSource === source ? "opacity-100" : "opacity-0"
+                    displayValue === source ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {source}
+                {source === "all" ? "All Sources" : source}
               </CommandItem>
             ))}
           </CommandGroup>
