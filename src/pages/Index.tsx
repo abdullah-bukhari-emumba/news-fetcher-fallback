@@ -4,7 +4,6 @@ import { NewsCard } from "@/components/NewsCard";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { SearchBar } from "@/components/SearchBar";
 import { SourceFilter } from "@/components/SourceFilter";
-import { AuthorFilter } from "@/components/AuthorFilter";
 import { fetchNews } from "@/services/newsService";
 import { Category, Source } from "@/data/mockNews";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,12 +14,11 @@ import { DateRange } from "react-day-picker";
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>("technology");
   const [selectedSource, setSelectedSource] = useState<Source | "all">("all");
-  const [selectedAuthor, setSelectedAuthor] = useState<string | "all">("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
   const { data: news, isLoading } = useQuery({
-    queryKey: ["news", selectedCategory, selectedSource, searchTerm, dateRange, selectedAuthor],
+    queryKey: ["news", selectedCategory, selectedSource, searchTerm, dateRange],
     queryFn: () => fetchNews(selectedCategory),
   });
 
@@ -30,14 +28,12 @@ const Index = () => {
     
     const matchesSource = selectedSource === "all" || article.source.name === selectedSource;
     
-    const matchesAuthor = selectedAuthor === "all" || article.author === selectedAuthor;
-    
     const matchesDate = !dateRange?.from || !dateRange?.to || (
       isAfter(parseISO(article.publishedAt), dateRange.from) &&
       isBefore(parseISO(article.publishedAt), dateRange.to)
     );
 
-    return matchesSearch && matchesSource && matchesAuthor && matchesDate;
+    return matchesSearch && matchesSource && matchesDate;
   });
 
   return (
@@ -49,7 +45,6 @@ const Index = () => {
           <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
           <div className="flex gap-4 flex-wrap">
             <SourceFilter selectedSource={selectedSource} onSourceChange={setSelectedSource} />
-            <AuthorFilter selectedAuthor={selectedAuthor} onAuthorChange={setSelectedAuthor} />
             <DatePickerWithRange date={dateRange} onDateChange={setDateRange} />
           </div>
         </div>
