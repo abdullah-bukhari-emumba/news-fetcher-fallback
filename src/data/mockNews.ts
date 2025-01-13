@@ -27,13 +27,14 @@ export const categories = [
 export type Category = (typeof categories)[number];
 
 export const sources = [
-  "BBC News",
+  // "BBC News",
   "The Guardian",
   "New York Times",
-  "Tech Daily",
-  "Health Weekly",
-  "Sports Network",
-  "Financial Times"
+  "News API",
+  // "Tech Daily",
+  // "Health Weekly",
+  // "Sports Network",
+  // "Financial Times"
 ] as const;
 
 export type Source = (typeof sources)[number];
