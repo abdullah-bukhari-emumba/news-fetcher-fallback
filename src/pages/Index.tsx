@@ -13,7 +13,7 @@ import { DatePickerWithRange } from "@/components/DatePickerWithRange";
 import { DateRange } from "react-day-picker";
 
 const Index = () => {
-  const [selectedCategory, setSelectedCategory] = useState<Category>("all");
+  const [selectedCategory, setSelectedCategory] = useState<Category>("technology");
   const [selectedSource, setSelectedSource] = useState<Source | "all">("all");
   const [selectedAuthor, setSelectedAuthor] = useState<string | "all">("all");
   const [searchTerm, setSearchTerm] = useState("");

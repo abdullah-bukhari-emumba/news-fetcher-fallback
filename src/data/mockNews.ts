@@ -14,7 +14,7 @@ export interface NewsArticle {
 }
 
 export const categories = [
-  "all",
+  // "all",
   "technology",
   "environment",
   "health",
