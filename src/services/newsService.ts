@@ -110,7 +110,7 @@ function createNewsService(...sources: NewsSource[]) {
         const results = await Promise.all(sources.map(src => src.fetchNews(category)));
         return results.flat();
       } catch (error) {
-        console.error("Error in NewsService:", error); return undefined;
+        console.error("Error in NewsService:", error);
         return createMockNewsSource().fetchNews(category);
       }
     },
