@@ -17,18 +17,18 @@ import { useState } from "react";
 import { Source, sources } from "@/data/mockNews";
 
 interface SourceFilterProps {
-  selectedSource: Source | "all";
-  onSourceChange: (source: Source | "all") => void;
+  selectedSource: Source | "All Sources";
+  onSourceChange: (source: Source | "All Sources") => void;
 }
 
 export function SourceFilter({ selectedSource, onSourceChange }: SourceFilterProps) {
   const [open, setOpen] = useState(false);
 
   // Ensure we have a valid selectedSource value
-  const displayValue = selectedSource || "all";
+  const displayValue = selectedSource || "All Sources";
   
-  // Ensure sources array is valid and add "all" option
-  const sourceOptions = ["all", ...(Array.isArray(sources) ? sources : [])];
+  // Ensure sources array is valid and add "All Sources" option
+  const sourceOptions = ["All Sources", ...(Array.isArray(sources) ? sources : [])];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,11 +51,12 @@ export function SourceFilter({ selectedSource, onSourceChange }: SourceFilterPro
             {sourceOptions.map((source) => (
               <CommandItem
                 key={source}
-                value={source}
+                value={source} 
                 onSelect={() => {
-                  onSourceChange(source as Source | "all");
+                  onSourceChange(source as Source | "All Sources");
                   setOpen(false);
                 }}
+                disabled={source === "News API"}
               >
                 <Check
                   className={cn(
@@ -63,7 +64,7 @@ export function SourceFilter({ selectedSource, onSourceChange }: SourceFilterPro
                     displayValue === source ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {source === "all" ? "All Sources" : source}
+                {source === "All Sources" ? "All Sources" : source}
               </CommandItem>
             ))}
           </CommandGroup>

@@ -13,7 +13,7 @@ import { DateRange } from "react-day-picker";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>("technology");
-  const [selectedSource, setSelectedSource] = useState<Source | "all">("all");
+  const [selectedSource, setSelectedSource] = useState<Source | "All Sources">("All Sources");
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
@@ -26,7 +26,7 @@ const Index = () => {
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.description.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesSource = selectedSource === "all" || article.source.name === selectedSource;
+    const matchesSource = selectedSource === "All Sources" || article.source.name === selectedSource;
     
     const matchesDate = !dateRange?.from || !dateRange?.to || (
       isAfter(parseISO(article.publishedAt), dateRange.from) &&

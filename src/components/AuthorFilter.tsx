@@ -20,14 +20,14 @@ import { mockNews } from "@/data/mockNews";
 const authors = Array.from(new Set(mockNews.map(article => article.author).filter(Boolean))) as string[];
 
 interface AuthorFilterProps {
-  selectedAuthor: string | "all";
-  onAuthorChange: (author: string | "all") => void;
+  selectedAuthor: string | "All Sources";
+  onAuthorChange: (author: string | "All Sources") => void;
 }
 
 export function AuthorFilter({ selectedAuthor, onAuthorChange }: AuthorFilterProps) {
   const [open, setOpen] = useState(false);
-  const displayValue = selectedAuthor || "all";
-  const authorOptions = ["all", ...authors];
+  const displayValue = selectedAuthor || "All Sources";
+  const authorOptions = ["All Sources", ...authors];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -38,7 +38,7 @@ export function AuthorFilter({ selectedAuthor, onAuthorChange }: AuthorFilterPro
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {displayValue === "all" ? "All Authors" : displayValue}
+          {displayValue === "All Sources" ? "All Authors" : displayValue}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -62,7 +62,7 @@ export function AuthorFilter({ selectedAuthor, onAuthorChange }: AuthorFilterPro
                     displayValue === author ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {author === "all" ? "All Authors" : author}
+                {author === "All Sources" ? "All Authors" : author}
               </CommandItem>
             ))}
           </CommandGroup>
